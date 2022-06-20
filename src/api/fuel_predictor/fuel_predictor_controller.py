@@ -11,7 +11,13 @@ router = APIRouter()
 """
 Returns a prediction on a single trip data point
 """
-@router.post("/predict", dependencies=[Depends(check_api_key)])
+
+
+@router.post(
+    "/predict",
+    dependencies=[Depends(check_api_key)],
+    description="Predicts FOC from a single datapoint",
+)
 async def get_prediction(request: Request, dataPoint: TripData):
     dataPointDict = {
         "Date": dataPoint.Date,
@@ -23,17 +29,23 @@ async def get_prediction(request: Request, dataPoint: TripData):
     }
 
     X = pd.DataFrame.from_dict([dataPointDict])
-    print(X.head())
 
     X = config.preprocessor.transform(X)
     y = config.model.predict(X)
 
     return JSONResponse(content={"prediction": y[0]})
 
+
 """
 Returns predictions for multiple trip datapoints as a paintext csv
 """
-@router.post("/predict/from_file", dependencies=[Depends(check_api_key)])
+
+
+@router.post(
+    "/predict/from_file",
+    dependencies=[Depends(check_api_key)],
+    description="Predicts FOCs from a csv of trip data, returns csv with FOC predictions as plain text",
+)
 async def get_file_predictions(data: UploadFile):
     X = pd.read_csv(BytesIO(await data.read()))
 

@@ -8,6 +8,5 @@ Guard to prevent access without api-key header
 TODO -> Should change for OAuth2
 """
 async def check_api_key(api_key: str = Header()):
-    print(api_key_secret)
     if api_key != api_key_secret:
         raise HTTPException(status_code=401, detail="Invalid api key")

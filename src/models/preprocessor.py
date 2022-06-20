@@ -48,8 +48,9 @@ class CartesianTransfomer(BaseEstimator, TransformerMixin):
 column_transformer = ColumnTransformer(
     remainder="passthrough",
     transformers=[
+        ("minmax", MinMaxScaler(), ["year", "month", "day", "hour"]),
         (
-            "minmax",
+            "standard",
             StandardScaler(),
             ["Speed(Ground)", "M/E REVOLUTION", "x", "y", "z"],
         ),
